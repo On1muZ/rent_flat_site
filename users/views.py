@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .forms import CustomUserCreationForm
 from .models import User, Seller, Buyer
 from django.contrib.auth import login, authenticate, logout
