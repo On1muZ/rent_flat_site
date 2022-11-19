@@ -6,6 +6,7 @@ class Order(models.Model):
     title = models.CharField("Название", max_length = 100)
     adress = models.CharField('Адрес', max_length = 50)
     desc = models.TextField('Описание')
+    is_arendated = models.BooleanField("Арендовано" ,default = False)
     date = models.DateField('Дата', auto_now = True)
     price = models.IntegerField('Цена за месяц аренды', null = True)
     author = models.ForeignKey(User, on_delete = models.CASCADE)

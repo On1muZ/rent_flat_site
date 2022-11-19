@@ -13,7 +13,11 @@ urlpatterns = [
     path('logout/', userviews.logoutuser, name = 'logoutuser'),
     #Main
     path('', rentviews.home, name = 'home'),
-    path('createorder/', rentviews.createOrder, name = 'createorder')
+    path('createorder/', rentviews.createOrder, name = 'createorder'),
+    path('vieworder/<int:order_id>', rentviews.vieworder, name = 'vieworder'),
+    path('myorders/<int:user_id>', rentviews.myorders, name = 'myorders'),
+    path('isarendated/<int:user_id>/<int:order_id>', rentviews.isarendated, name = 'isarendated'),
+    path('isnotarendated/<int:user_id>/<int:order_id>', rentviews.isnotarendated, name = 'isnotarendated')
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

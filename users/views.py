@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .forms import CustomUserCreationForm
-from .models import User, Seller, Buyer
+from .models import User
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.db import IntegrityError
@@ -21,12 +21,6 @@ def signupuser(request):
                     account_type = request.POST['account_type'])
                 user_object.save()
                 login(request, user_object)
-                if user_object.account_type == 's':
-                    model = Seller(user = user_object)
-                    model.save()
-                else:
-                    model = Buyer(user = user_object)
-                    model.save()
                 return redirect('home')
             except IntegrityError:
                 return render(request, './signupuser.html', {'form':CustomUserCreationForm(), 'error': 'Это имя пользователя занято, пожалуйста попробуйте другое.'})
