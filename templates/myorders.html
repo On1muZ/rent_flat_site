@@ -16,7 +16,7 @@
         <h3>{{ order.adress }}</h3>
         <img src="{{ order.img_outside.url }}" weight="350" height="350"> <img src="{{ order.img_inside.url }}" weight="350" height="350">
         <h3>Фото снаружиㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤФото внутри</h3>
-        <p>{{ order.desc }}</p>
+        <h4>{{ order.desc }}</h4>
         <h3>Телефон аредодателя: {{ order.author.phone }}</h3>
         <h3>Цена за месяц аренды: {{ order.price }} рублей</h3>
         {% if order.is_arendated == False %}
@@ -24,14 +24,18 @@
             {% csrf_token %}
             <button type="submit" class="btn btn-primary">Арендовано</button>
         </form>
-        <br>
         {% else %}
         <form action="{% url 'isnotarendated' user.id order.id %}" method="POST">
             {% csrf_token %}
             <button type="submit" class="btn btn-primary">Не арендовано</button>
         </form>
-        <br>
         {% endif %}
+        <br>
+        <form action="{% url 'deleteorder' user.id order.id %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Удалить</button>
+        </form>
+        <br>
         </div>
      </center>
     {% endfor %}

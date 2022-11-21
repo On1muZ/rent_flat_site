@@ -4,8 +4,8 @@ from django.contrib.auth.models import AbstractUser
 # Create your models here.
 class User(AbstractUser):
     types = (
-        ('s', 'Продавец'),
-        ('b', "Покупатель")
+        ('s', 'Арендодатель'),
+        ('b', "Арендатор")
     )
     account_type = models.CharField('Тип аккаунта', max_length = 1, choices = types)
     fio = models.CharField('ФИО', max_length = 150)

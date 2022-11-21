@@ -17,7 +17,9 @@ urlpatterns = [
     path('vieworder/<int:order_id>', rentviews.vieworder, name = 'vieworder'),
     path('myorders/<int:user_id>', rentviews.myorders, name = 'myorders'),
     path('isarendated/<int:user_id>/<int:order_id>', rentviews.isarendated, name = 'isarendated'),
-    path('isnotarendated/<int:user_id>/<int:order_id>', rentviews.isnotarendated, name = 'isnotarendated')
+    path('isnotarendated/<int:user_id>/<int:order_id>', rentviews.isnotarendated, name = 'isnotarendated'),
+    path('deleteorder/<int:user_id>/<int:order_id>', rentviews.deleteorder, name = 'deleteorder'),
+    path('deletecomment/<int:comment_id>', rentviews.deletecomment, name = 'delelecomment')
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

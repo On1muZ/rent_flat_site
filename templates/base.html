@@ -14,7 +14,7 @@
             nowrap;
         }
         body{
-         background-color: rgb(122, 219, 248); /* Цвет фона веб-страницы */
+         background-color: rgb(77, 213, 255); /* Цвет фона веб-страницы */
         } 
         h1{
          background-color: white; /* Цвет фона под заголовком */
@@ -23,7 +23,10 @@
          background-color: white; /* Цвет фона под заголовком */
         }
         .line {
-        border-bottom: 10px solid rgb(1, 145, 185); /* Параметры линии */
+        border-bottom: 10px solid rgb(0, 178, 228); /* Параметры линии */
+        }
+        .smalline {
+        border-bottom: 5px solid rgb(0, 178, 228); /* Параметры линии */
         }
        </style>
 </head>
@@ -36,15 +39,18 @@
             <h3>{% if user.is_authenticated %}Здравствуйте {{ user.fio }}{% else %}<a href="{% url 'loginuser' %}">Логин</a> <a href="{% url 'signupuser' %}">Регистрация</a>{% endif %}</h3>
             </nobr>
             {% if user.is_authenticated %}
-            <form method="POST" action="{% url 'logoutuser' %}">
+                <form method="POST" action="{% url 'logoutuser' %}">
                 {% csrf_token %}
-            <button type="submit" class="btn btn-primary">Выйти из аккаунта</button>
-            </form>
-            {% if user.account_type == 's' %}
-            <h3><a href="{% url 'myorders' user.id %}">Мои объявления</a> <a href="{% url 'createorder' %}">{{ a }}</a></h3>
+                <button type="submit" class="btn btn-primary">Выйти из аккаунта</button>
+                </form>
+                {% if user.account_type == 's' %}
+                    <h3><a href="{% url 'myorders' user.id %}">Мои объявления</a> <a href="{% url 'createorder' %}">{{ a }}</a></h3>
+                {% endif %}
+            {% endif %}
+            {% if request.path != '/' %}
+                <h2><a href="{% url 'home' %}">Домашняя страница</a></h2>
             {% endif %}
             <br>
-            {% endif %}
         </div>
     </div>
     </center>

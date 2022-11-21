@@ -3,21 +3,62 @@
 <head>
     {% extends 'base.html' %}
     <meta charset="UTF-8">
-
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+
 </head>
 <body>
     {% block content %}
     <center>
-       <h2>{{ order.title }}</h2> 
-       <h3>{{ order.adress }}</h3>
-       <img src="{{ order.img_outside.url }}" weight="350" height="350"> <img src="{{ order.img_inside.url }}" weight="350" height="350">
-       <h3>Фото снаружиㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤФото внутри</h3>
-       <p>{{ order.desc }}</p>
-       <h3>Телефон аредодателя: {{ order.author.phone }}</h3>
-       <h3>Цена за месяц аренды: {{ order.price }} рублей</h3>
+        <div class="line">
+            <h2>{{ order.title }}</h2> 
+            <h3>{{ order.adress }}</h3>
+            <img src="{{ order.img_outside.url }}" weight="350" height="350"> <img src="{{ order.img_inside.url }}" weight="350" height="350">
+            <h3>Фото снаружиㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤㅤФото внутри</h3>
+            <p style="font-size: 25px;">{{ order.desc }}</p>
+            <h3>Телефон аредодателя: {{ order.author.phone }}</h3>
+            <h3>Цена за месяц аренды: {{ order.price }} рублей</h3>
+        {% if user.is_staff %}
+        <form action="{% url 'deleteorder' user.id order.id %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary" style="width: 250px; height: 40px;">Удалить объявление</button>
+        </form>
+        {% endif %}
+        <br>
+    </div>
+        <div class="white">
+            <div class="line">
+                <h2>Коментарии:</h2>
+                    <div class="white-space">
+                        {% if user.is_authenticated %}
+                        <form method="POST">
+                            {% csrf_token %}
+                            <p style="font-size: 25px;">Комментарий: <input type="text" name="text"  style="width: 1050px; height: 50px;" />ㅤ<button type="submit" class="btn btn-primary" style="width: 110px; height: 50px;">Отправить</button></p>
+                        </form>
+                        {% endif %}
+                        {% if comments %}
+                            {% for comment in comments %}
+                            {% if comment.active == True %}
+                            <div class="smalline">
+                                <h3 style="display:inline;">{{ comment.author.fio }}</h3>: <p style="display:inline; font-size: 20px; word-wrap: break-word;">{{ comment.text }}</p>
+                                <div class="white-space">
+                                <h5>{{ comment.date_time }} 
+                                    {% if comment.author == request.user %}
+                                    <form method="POST" action="{% url 'delelecomment' comment.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-primary" style="width: 100px; height: 40px;">Удалить</button>
+                                    </form>
+                                    {% endif %}
+                                </h5>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+            </div>
+        </div>
     </center>
     {% endblock %}
 </body>

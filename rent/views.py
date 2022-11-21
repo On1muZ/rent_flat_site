@@ -1,7 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Order
+from .models import Order, Comment
 from .forms import orderForm
 from users.models import User
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
 
 # Create your views here.
 def home(request):
@@ -20,6 +22,7 @@ def home(request):
     }
     return render(request, './home.html', context)
 
+@login_required(login_url='loginuser')
 def createOrder(request):
     a = ''
     if request.user.account_type == 's':
@@ -44,12 +47,29 @@ def createOrder(request):
         return redirect('home')
 
 def vieworder(request, order_id):
-    a = ''
-    order = get_object_or_404(Order, pk = order_id)
-    return render(request, './vieworder.html', {'order':order,
-    'a':a
-    })
+    if request.method == 'GET':
+        a = ''
+        if request.user.is_authenticated:
+            if request.user.account_type == 's':
+                a = 'Создать объявление'
+        order = get_object_or_404(Order, pk = order_id)
+        comments = Comment.objects.filter(post = order).order_by('-date_time')
+        return render(request, './vieworder.html', {'order':order,
+        'a':a,
+        'comments':comments
+        })
+    else:
+        a = ''
+        if request.user.is_authenticated:
+            if request.user.account_type == 's':
+                a = 'Создать объявление'
+        order = get_object_or_404(Order, pk = order_id)
+        comment = Comment(post = order, author = request.user, text = request.POST['text'])
+        comment.save()
+        comments = Comment.objects.filter(post = order).order_by('-date_time')
+        return HttpResponseRedirect(request.path_info)
 
+@login_required(login_url='loginuser')
 def myorders(request, user_id):
     if request.user.account_type == 's':
         a = 'Создать объявление'
@@ -62,7 +82,8 @@ def myorders(request, user_id):
             'a':a})
     else:
         return redirect('home')
-    
+
+@login_required(login_url='loginuser')
 def isarendated(request, user_id, order_id):
     if request.method == 'POST':
         order = get_object_or_404(Order, pk = order_id)
@@ -73,6 +94,7 @@ def isarendated(request, user_id, order_id):
         else:
             return redirect('home')
 
+@login_required(login_url='loginuser')
 def isnotarendated(request, user_id, order_id):
     if request.method == 'POST':
         order = get_object_or_404(Order, pk = order_id)
@@ -82,3 +104,24 @@ def isnotarendated(request, user_id, order_id):
             return redirect('home')
         else:
             return redirect('home')
+
+@login_required(login_url='loginuser')
+def deleteorder(request, user_id, order_id):
+    if request.method == 'POST':
+        order = get_object_or_404(Order, pk = order_id)
+        user = get_object_or_404(User, pk = user_id)
+        if user == order.author or request.user.is_staff:
+            order = Order.objects.get(id = order_id)
+            order.delete()
+            return redirect('home')
+        else:
+            return redirect('home')
+
+def deletecomment(request, comment_id):
+    if request.method == 'POST':
+        comment = get_object_or_404(Comment, pk = comment_id)
+        comment.delete()
+        return redirect('home')
+    else:
+        return redirect('home')
+
